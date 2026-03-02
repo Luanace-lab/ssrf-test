@@ -1,0 +1,14 @@
+name: SSRF Test
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'URL to test'
+        required: true
+        type: string
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test URL
+        run: curl -s -o /dev/null -w "%{http_code}" "${{ github.event.inputs.target_url }}" || true
